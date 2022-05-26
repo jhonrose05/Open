@@ -28,6 +28,8 @@ Route::resource('inversion', App\Http\Controllers\InversionController::class)->m
 
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
+route::get('charge', [App\Http\Controllers\pay::class, 'charge'])->name('charge')->middleware('auth');Auth::routes();
+
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);

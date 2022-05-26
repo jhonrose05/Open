@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Inversion;
 use Illuminate\Http\Request;
+use Shakurov\Coinbase\Facades\Coinbase;
+use Shakurov\Coinbase\CoinbaseServiceProvider;
 
 /**
  * Class InversionController
@@ -34,7 +36,8 @@ class InversionController extends Controller
         $inversion = new Inversion();
         $usuario = Auth()->user()->id;
         // print_r($usuario);die();
-        return view('inversion.create', compact('inversion','usuario'));
+        $btn = "Pagar";
+        return view('inversion.create', compact('inversion','usuario','btn'));
     }
 
     /**
@@ -45,12 +48,26 @@ class InversionController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Inversion::$rules);
+        // request()->validate(Inversion::$rules);
 
         $inversion = Inversion::create($request->all());
+        $vl = $request->valInversion;
+        // print_r($vl);die();
 
-        return redirect()->route('inversion.index')
-            ->with('success', 'Inversion created successfully.');
+        $charge = Coinbase::createCharge([
+            'name' => 'Open Invesment',
+            'description' => 'Compra de Ocoin',
+            'local_price' => [
+                'amount' => $vl,
+                'currency' => 'USD',
+            ],
+            'pricing_type' => 'fixed_price',
+        ]);
+
+        $url = $charge['data']['hosted_url'];
+        return redirect($url);
+        // return redirect()->route('inversion.index')
+        //     ->with('success', 'Inversion created successfully.');
     }
 
     /**
@@ -75,8 +92,9 @@ class InversionController extends Controller
     public function edit($id)
     {
         $inversion = Inversion::find($id);
+        $usuario = Auth()->user()->id;
 
-        return view('inversion.edit', compact('inversion'));
+        return view('inversion.edit', compact('inversion','usuario'));
     }
 
     /**

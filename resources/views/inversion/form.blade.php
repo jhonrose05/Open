@@ -30,12 +30,12 @@
         </div>
         <div class="form-group" style="display: none">
             {{ Form::label('numEstado') }}
-            {{ Form::text('numEstado', $inversion->numEstado, ['class' => 'form-control' . ($errors->has('numEstado') ? ' is-invalid' : ''), 'placeholder' => 'Numestado']) }}
+            {{ Form::text('numEstado', 1, ['class' => 'form-control' . ($errors->has('numEstado') ? ' is-invalid' : ''), 'placeholder' => 'Numestado']) }}
             {!! $errors->first('numEstado', '<div class="invalid-feedback">:message</div>') !!}
         </div>
 
     </div>
     <div class="box-footer mt20">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">{{ $btn}}</button>
     </div>
 </div>
